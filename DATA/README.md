@@ -1,6 +1,6 @@
 # GenImage project data
 
-Updated November 16, 2026. This folder contains the original local image pool and final analyzed dataset.
+Updated November 18, 2026. This folder contains the original local image pool and final analyzed dataset.
 
 ## Folder contents
 
@@ -9,13 +9,13 @@ data/
   README.md
   original/
     GET_DATA.md
-    images/                 # 4,707 unchanged local downloads; excluded from Git
+    images/                 # 4,707 unchanged downloads; tracked with Git
     original_files.csv      # complete local file inventory with SHA-256
     source_manifest.csv     # provenance for the selected 4,400, before assigned splits
     source_inventory.json   # original archive locations
   cleaned/
     dataset_manifest.csv    # final modeling copies, source metadata, and splits
-    images/                 # 4,400 RGB JPEG modeling copies at 224 x 224
+    images/                 # 4,400 RGB JPEG modeling copies at 224 x 224; tracked with Git
     preprocess.py           # offline reproduction and verification
     requirements.txt        # pinned Pillow version
     preprocessing_audit.json # checks of the standardized modeling copies
@@ -49,7 +49,7 @@ python -m pip install -r data/cleaned/requirements.txt
 python data/cleaned/preprocess.py
 ```
 
-The script is offline and always reads `original_image_path`, so reruns do not repeatedly compress existing modeling copies. It retains labels and splits and updates processed dimensions and hashes in the final manifest only after checks pass. Original measurements remain in `original_*` columns. The image directories are excluded from Git; see `original/GET_DATA.md` for source restoration, then run this script to recreate modeling copies. Keep the recorded Pillow version for reproducibility; JPEG bytes can also depend on the JPEG library version recorded in the preprocessing audit.
+The script is offline and always reads `original_image_path`, so reruns do not repeatedly compress existing modeling copies. It retains labels and splits and updates processed dimensions and hashes in the final manifest only after checks pass. Original measurements remain in `original_*` columns. Both image directories are tracked as regular Git files and are downloaded with a normal clone. See `original/GET_DATA.md` for clone instructions and optional source restoration; this script can recreate modeling copies from the originals. Keep the recorded Pillow version for reproducibility; JPEG bytes can also depend on the JPEG library version recorded in the preprocessing audit.
 
 Re-encoding standardizes the final format but cannot erase all prior JPEG artifacts. Center cropping removes peripheral content, and low-resolution originals are upsampled. These tradeoffs may affect performance and should be reported. Consistent preprocessing reduces these specific confounds; it does not establish that all shortcuts have been removed.
 

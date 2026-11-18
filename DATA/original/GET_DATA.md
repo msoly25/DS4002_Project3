@@ -1,6 +1,16 @@
 # Obtain the original images
 
-The selected 4,400 images occupy approximately 1.75 GB. They remain local in `images/`, which is excluded from ordinary Git commits. No hosted copy of this exact subset has been published. The source links below were recorded during acquisition on November 12, 2026; availability was not rechecked during this reorganization.
+Both image folders are included as regular Git files: 4,707 unchanged original images (approximately 1.77 GiB) and 4,400 cleaned modeling images (approximately 137 MiB).
+
+## Download from this repository
+
+```text
+git clone https://github.com/msoly25/DS4002_Project3.git
+```
+
+Open the cloned folder in VS Code to view the images. No Git LFS setup is needed. The full collection contains approximately 1.91 GiB of image data, plus additional disk space for Git history. For an existing clone, run `git pull` to retrieve the committed images.
+
+The original-source instructions below are an alternative for reconstructing the analyzed subset. The source links were recorded during acquisition on November 12, 2026; availability was not rechecked during this update.
 
 ## Restore the exact subset
 
