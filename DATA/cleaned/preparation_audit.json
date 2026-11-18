@@ -1,0 +1,39 @@
+{
+  "selected": 4400,
+  "class_counts": {
+    "Real": 2200,
+    "AI-generated": 2200
+  },
+  "split_counts": {
+    "train": 2400,
+    "validation": 400,
+    "test_seen": 400,
+    "test_unseen": 1200
+  },
+  "rejections": {
+    "near_duplicate_candidate_dhash_le4": 3
+  },
+  "archive_image_counts": {
+    "midjourney": {
+      "train/ai": 162000,
+      "train/nature": 161701,
+      "val/ai": 6000,
+      "val/nature": 6000
+    },
+    "sd14": {
+      "train/ai": 162000,
+      "train/nature": 162000,
+      "val/ai": 6000,
+      "val/nature": 6000
+    },
+    "sd15": {
+      "train/ai": 166000,
+      "train/nature": 153274,
+      "val/ai": 8000,
+      "val/nature": 8000
+    }
+  },
+  "range_bytes_this_run": 0,
+  "selected_file_bytes": 1748920708,
+  "seed": 4002
+}

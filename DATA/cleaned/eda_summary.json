@@ -1,0 +1,75 @@
+[
+  {
+    "group": "Real",
+    "n": 2200,
+    "width_min": 62,
+    "width_median": 500.0,
+    "width_max": 3648,
+    "height_min": 75,
+    "height_median": 375.0,
+    "height_max": 3264,
+    "megapixels_median": 0.1875,
+    "square_pct": 3.6363636363636362,
+    "formats": {
+      "JPEG": 2200
+    },
+    "modes": {
+      "RGB": 2165,
+      "L": 35
+    }
+  },
+  {
+    "group": "Stable Diffusion 1.4",
+    "n": 800,
+    "width_min": 512,
+    "width_median": 512.0,
+    "width_max": 512,
+    "height_min": 512,
+    "height_median": 512.0,
+    "height_max": 512,
+    "megapixels_median": 0.262144,
+    "square_pct": 100.0,
+    "formats": {
+      "PNG": 800
+    },
+    "modes": {
+      "RGB": 800
+    }
+  },
+  {
+    "group": "Stable Diffusion 1.5",
+    "n": 800,
+    "width_min": 512,
+    "width_median": 512.0,
+    "width_max": 512,
+    "height_min": 512,
+    "height_median": 512.0,
+    "height_max": 512,
+    "megapixels_median": 0.262144,
+    "square_pct": 100.0,
+    "formats": {
+      "PNG": 800
+    },
+    "modes": {
+      "RGB": 800
+    }
+  },
+  {
+    "group": "Midjourney",
+    "n": 600,
+    "width_min": 1024,
+    "width_median": 1024.0,
+    "width_max": 1024,
+    "height_min": 1024,
+    "height_median": 1024.0,
+    "height_max": 1024,
+    "megapixels_median": 1.048576,
+    "square_pct": 100.0,
+    "formats": {
+      "PNG": 600
+    },
+    "modes": {
+      "RGB": 600
+    }
+  }
+]

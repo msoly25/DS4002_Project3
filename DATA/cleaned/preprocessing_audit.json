@@ -1,0 +1,61 @@
+{
+  "total_images": 4400,
+  "settings": {
+    "exif_orientation": "applied before resize",
+    "color_mode": "RGB",
+    "resize_short_side": 256,
+    "resize_rounding": "floor long side",
+    "resampling": "LANCZOS",
+    "crop": "center; floor left/top offsets",
+    "output_size": [
+      224,
+      224
+    ],
+    "format": "JPEG",
+    "quality": 95,
+    "subsampling": "4:4:4 (Pillow subsampling=0)",
+    "optimize": false,
+    "progressive": false,
+    "metadata": "no source EXIF, ICC profile, or comments copied"
+  },
+  "pillow_version": "13.0.0",
+  "jpeg_library": "8.0",
+  "output_format_counts": {
+    "JPEG": 4400
+  },
+  "output_dimensions": "224x224",
+  "output_mode": "RGB",
+  "output_bytes": 143998985,
+  "original_files_verified": 4707,
+  "originals_unchanged": true,
+  "labels_and_splits_unchanged": true,
+  "midjourney_only_in_test_unseen": true,
+  "duplicate_file_hashes": 0,
+  "duplicate_pixel_hashes": 0,
+  "near_duplicate_pairs_dhash_le4": 0,
+  "uniform_jpeg_quantization_tables": true,
+  "split_counts": {
+    "train": {
+      "real": 1200,
+      "ai": 1200
+    },
+    "validation": {
+      "real": 200,
+      "ai": 200
+    },
+    "test_seen": {
+      "real": 200,
+      "ai": 200
+    },
+    "test_unseen": {
+      "real": 600,
+      "ai": 600
+    }
+  },
+  "normalization": "Not baked into JPEGs. Apply pretrained weights normalization when loading tensors.",
+  "limitations": [
+    "Center cropping removes peripheral content.",
+    "Re-encoding does not erase all prior compression artifacts.",
+    "Perceptual hashing cannot exclude every transformed duplicate."
+  ]
+}

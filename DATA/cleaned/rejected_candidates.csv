@@ -1,0 +1,4 @@
+source_collection,source_path,reason
+sd14,imagenet_ai_0419_sdv4/train/nature/n02091635_5164.JPEG,near_duplicate_candidate_dhash_le4
+sd14,imagenet_ai_0419_sdv4/train/nature/n04201297_7903.JPEG,near_duplicate_candidate_dhash_le4
+sd15,imagenet_ai_0424_sdv5/val/ai/458_sdv5_00009.png,near_duplicate_candidate_dhash_le4

@@ -1,0 +1,40 @@
+{
+  "total_images": 4400,
+  "class_counts": {
+    "Real": 2200,
+    "AI-generated": 2200
+  },
+  "missing_images": [],
+  "unreadable_images": [],
+  "metadata_mismatches": [],
+  "duplicate_paths": 0,
+  "duplicate_file_hashes": 0,
+  "duplicate_pixel_hashes": 0,
+  "near_duplicate_pairs_dhash_le4": 0,
+  "missing_metadata_cells": 0,
+  "test_metric_readiness": {
+    "test_seen": {
+      "real": 200,
+      "ai": 200,
+      "supported_metrics": [
+        "accuracy",
+        "precision",
+        "recall",
+        "f1"
+      ],
+      "synthetic_prediction_checks": "passed; not model scores"
+    },
+    "test_unseen": {
+      "real": 600,
+      "ai": 600,
+      "supported_metrics": [
+        "accuracy",
+        "precision",
+        "recall",
+        "f1"
+      ],
+      "synthetic_prediction_checks": "passed; not model scores"
+    }
+  },
+  "scope": "Original selected images before standardized preprocessing; see preprocessing_audit.json for modeling copies."
+}
