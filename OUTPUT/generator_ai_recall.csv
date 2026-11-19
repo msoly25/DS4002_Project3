@@ -1,0 +1,4 @@
+split,generator,n_ai_images,ai_recall
+test_seen,Stable Diffusion 1.4,100,0.82
+test_seen,Stable Diffusion 1.5,100,0.83
+test_unseen,Midjourney,600,0.5233333333333333

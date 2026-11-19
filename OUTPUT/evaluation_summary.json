@@ -1,0 +1,42 @@
+{
+  "model": "ResNet-50",
+  "checkpoint": "/content/drive/MyDrive/DSProject3_MI3/model_outputs/resnet50_best_model.pth",
+  "classification_threshold": 0.5,
+  "positive_class": "AI-generated",
+  "test_seen": {
+    "split": "test_seen",
+    "n_images": 400,
+    "accuracy": 0.7725,
+    "precision": 0.746606334841629,
+    "recall": 0.825,
+    "f1_score": 0.7838479809976246
+  },
+  "test_unseen": {
+    "split": "test_unseen",
+    "n_images": 1200,
+    "accuracy": 0.6433333333333333,
+    "precision": 0.6885964912280702,
+    "recall": 0.5233333333333333,
+    "f1_score": 0.5946969696969697
+  },
+  "generator_ai_recall": [
+    {
+      "split": "test_seen",
+      "generator": "Stable Diffusion 1.4",
+      "n_ai_images": 100,
+      "ai_recall": 0.82
+    },
+    {
+      "split": "test_seen",
+      "generator": "Stable Diffusion 1.5",
+      "n_ai_images": 100,
+      "ai_recall": 0.83
+    },
+    {
+      "split": "test_unseen",
+      "generator": "Midjourney",
+      "n_ai_images": 600,
+      "ai_recall": 0.5233333333333333
+    }
+  ]
+}

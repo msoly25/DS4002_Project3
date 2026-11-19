@@ -1,0 +1,17 @@
+{
+  "model": "ResNet-50",
+  "pretrained_weights": "ImageNet",
+  "training_images": 2400,
+  "validation_images": 400,
+  "optimizer": "Adam",
+  "learning_rate": 0.001,
+  "loss_function": "BCEWithLogitsLoss",
+  "batch_size": 32,
+  "maximum_epochs": 15,
+  "early_stopping_patience": 3,
+  "epochs_completed": 15,
+  "best_epoch": 15,
+  "best_validation_loss": 0.44276450157165526,
+  "best_validation_accuracy": 0.7825,
+  "random_seed": 42
+}
