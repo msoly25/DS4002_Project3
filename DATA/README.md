@@ -5,7 +5,7 @@ Updated November 18, 2026. This folder contains the original local image pool an
 ## Folder contents
 
 ```text
-data/
+DATA/
   README.md
   original/
     GET_DATA.md
@@ -16,7 +16,6 @@ data/
   cleaned/
     dataset_manifest.csv    # final modeling copies, source metadata, and splits
     images/                 # 4,400 RGB JPEG modeling copies at 224 x 224; tracked with Git
-    preprocess.py           # offline reproduction and verification
     requirements.txt        # pinned Pillow version
     preprocessing_audit.json # checks of the standardized modeling copies
     split_counts.csv
@@ -29,6 +28,8 @@ data/
 ```
 
 The final data now includes separate standardized modeling copies in `cleaned/images/`, referenced by `image_path`. The unchanged originals are linked by `original_image_path`. The extra 307 downloads are not part of the analyzed dataset; always load images through `cleaned/dataset_manifest.csv`. `source_manifest.csv` is a provenance view of the selected subset, not a complete pre-filter record of all downloaded candidates. All originals were preserved during organization and preprocessing. The earlier full decoding and duplicate audit of the originals is retained in `cleaned/quality_audit.json`; `cleaned/preprocessing_audit.json` records the separate checks of the modeling copies.
+
+The cleaning script is [SCRIPTS/00_preprocess.py](../SCRIPTS/00_preprocess.py). Run it before the numbered validation and modeling scripts. It reads and writes data under `DATA/`, independently of its location in `SCRIPTS/`.
 
 ## Implemented preprocessing
 
@@ -45,8 +46,8 @@ The script processes only the 4,400 selected records; the 307 unused originals r
 To reproduce from the project root with Python and the pinned dependency:
 
 ```text
-python -m pip install -r data/cleaned/requirements.txt
-python data/cleaned/preprocess.py
+python -m pip install -r DATA/cleaned/requirements.txt
+python SCRIPTS/00_preprocess.py
 ```
 
 The script is offline and always reads `original_image_path`, so reruns do not repeatedly compress existing modeling copies. It retains labels and splits and updates processed dimensions and hashes in the final manifest only after checks pass. Original measurements remain in `original_*` columns. Both image directories are tracked as regular Git files and are downloaded with a normal clone. See `original/GET_DATA.md` for clone instructions and optional source restoration; this script can recreate modeling copies from the originals. Keep the recorded Pillow version for reproducibility; JPEG bytes can also depend on the JPEG library version recorded in the preprocessing audit.

@@ -1,6 +1,7 @@
 """Build and verify modeling copies offline; originals and splits never change.
 
-Run: python data/cleaned/preprocess.py (requires Pillow==13.0.0).
+Run from the project root: python SCRIPTS/00_preprocess.py
+Requires Pillow==13.0.0 (see DATA/cleaned/requirements.txt).
 The manifest is published only after all output checks pass. Reruns always
 read originals, never previously compressed modeling copies.
 """
@@ -14,8 +15,10 @@ from pathlib import Path
 
 from PIL import Image, ImageOps, JpegImagePlugin, __version__ as pillow_version
 
-ROOT = Path(__file__).resolve().parents[2]
-HERE = Path(__file__).resolve().parent
+# Anchor data locations to the repository, regardless of the working directory.
+ROOT = Path(__file__).resolve().parents[1]
+DATA_DIR = ROOT / 'DATA'
+CLEANED_DIR = DATA_DIR / 'cleaned'
 NATIVE = ['image_path', 'width', 'height', 'megapixels', 'aspect_ratio',
           'format', 'color_mode', 'file_bytes', 'sha256', 'pixel_sha256', 'dhash']
 EXPECTED = {
@@ -39,6 +42,11 @@ def read_csv(path):
 
 
 def resolved(relative):
+    relative = Path(relative)
+    # Existing manifests use lowercase data/. Resolve that legacy spelling to
+    # DATA/ as well on case-sensitive systems, without rewriting provenance.
+    if relative.parts and relative.parts[0].lower() == 'data':
+        relative = Path('DATA', *relative.parts[1:])
     path = (ROOT / relative).resolve()
     if not path.is_relative_to(ROOT):
         raise ValueError(f'Path outside project: {relative}')
@@ -82,7 +90,7 @@ def convert(row):
         encoded = io.BytesIO()
         clean.save(encoded, format='JPEG', quality=95, subsampling=0,
                    optimize=False, progressive=False)
-    output = HERE / 'images' / (source.stem + '.jpg')
+    output = CLEANED_DIR / 'images' / (source.stem + '.jpg')
     raw = encoded.getvalue()
     if not output.exists() or output.read_bytes() != raw:
         temporary = output.with_suffix('.tmp')
@@ -103,7 +111,7 @@ def convert(row):
 
 
 def main():
-    manifest = HERE / 'dataset_manifest.csv'
+    manifest = CLEANED_DIR / 'dataset_manifest.csv'
     rows = read_csv(manifest)
     before = [(r['source_collection'], r['source_path'], r['label'], r['assigned_split']) for r in rows]
     if Counter((r['assigned_split'], r['label']) for r in rows) != EXPECTED:
@@ -117,7 +125,7 @@ def main():
     names = [Path(r.get('original_image_path', r['image_path'])).stem for r in rows]
     if len(set(names)) != 4400:
         raise ValueError('Output filename collision')
-    (HERE / 'images').mkdir(exist_ok=True)
+    (CLEANED_DIR / 'images').mkdir(exist_ok=True)
     with ThreadPoolExecutor(max_workers=8) as executor:
         outputs = []
         for i, result in enumerate(executor.map(convert, rows), 1):
@@ -135,9 +143,9 @@ def main():
     dh = [int(r['dhash'], 16) for r in final]
     near = [(i, j) for i in range(len(dh)) for j in range(i+1, len(dh)) if (dh[i]^dh[j]).bit_count() <= 4]
     # Preserve every original, including the 307 unused downloads.
-    inventory = read_csv(ROOT / 'data/original/original_files.csv')
+    inventory = read_csv(DATA_DIR / 'original' / 'original_files.csv')
     for r in inventory:
-        path = ROOT / 'data/original/images' / r['filename']
+        path = DATA_DIR / 'original' / 'images' / r['filename']
         if hashlib.sha256(path.read_bytes()).hexdigest() != r['sha256']:
             raise ValueError(f'Original file changed: {path}')
     if near:
@@ -163,7 +171,7 @@ def main():
         writer = csv.DictWriter(f, fieldnames=list(final[0]))
         writer.writeheader(); writer.writerows(final)
     temp.replace(manifest)
-    (HERE / 'preprocessing_audit.json').write_text(json.dumps(audit, indent=2), encoding='utf-8')
+    (CLEANED_DIR / 'preprocessing_audit.json').write_text(json.dumps(audit, indent=2), encoding='utf-8')
     print(json.dumps(audit, indent=2))
 
 
