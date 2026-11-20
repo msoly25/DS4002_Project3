@@ -115,6 +115,36 @@ python SCRIPTS/01_prepare_dataset.py --verify-only --cache-dir DATA/original/cac
 
 This check independently reconstructs selection, order, labels, splits, original hashes, and rejections, then compares them with the published manifest and rejection log. The final subset has 4,400 images; a fresh acquisition need not include the 307 unused originals retained from earlier downloads.
 
+### Model Checkpoint and Evaluation Reproducibility
+
+The evaluation scripts require a trained ResNet-50 checkpoint named `resnet50_best_model.pth`, located in the `OUTPUT/` directory.
+
+The original checkpoint used to produce the published evaluation metrics is not currently included in this repository.
+
+To generate a new checkpoint, run:
+
+```bash
+python SCRIPTS/06_train_resnet50.py
+```
+
+This trains the model using the established training and validation splits. The resulting checkpoint is saved to `OUTPUT/resnet50_best_model.pth`.
+
+Once a checkpoint is available, run:
+
+```bash
+python SCRIPTS/07_evaluate_resnet50.py
+python SCRIPTS/08_jpeg_sensitivity.py
+```
+
+These scripts generate the classification metrics, confusion matrices, generator-specific recall results, and JPEG compression sensitivity analysis.
+
+**Reproducibility note:** Retraining may produce different results because of hardware, software versions, and training variability. Exact reproduction of the currently published evaluation metrics requires the original checkpoint used in those experiments.
+
+The existing statistical error analysis can be reproduced independently without a checkpoint:
+
+```bash
+python SCRIPTS/09_classification_error_analysis.py
+```
 
 ## Analysis Results
 
