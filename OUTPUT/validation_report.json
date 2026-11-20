@@ -1,0 +1,106 @@
+{
+  "timestamp_utc": "2026-11-20T16:05:29.531480+00:00",
+  "manifest_path": "/content/DS4002_Project3/DATA/cleaned/dataset_manifest.csv",
+  "image_directory": "/content/DS4002_Project3/DATA/cleaned/images",
+  "total_manifest_records": 4400,
+  "total_physical_jpegs": 4400,
+  "checks": {
+    "Required manifest columns": true,
+    "Manifest contains 4400 records": true,
+    "Required metadata is complete": true,
+    "Manifest image paths are unique": true,
+    "Resolved image paths are unique": true,
+    "Expected dataset splits": true,
+    "Balanced overall labels": true,
+    "Balanced labels within splits": true,
+    "Midjourney held out for unseen testing": true,
+    "All manifest images exist": true,
+    "All images are readable": true,
+    "All images are 224 x 224": true,
+    "All images use JPEG format": true,
+    "All images use RGB color": true,
+    "No duplicate image file contents": true,
+    "File hashes match manifest": true,
+    "Exactly 4400 physical JPEG files": true,
+    "No unlisted JPEG files": true
+  },
+  "details": {
+    "Required manifest columns": null,
+    "Manifest contains 4400 records": {
+      "actual": 4400
+    },
+    "Required metadata is complete": null,
+    "Manifest image paths are unique": null,
+    "Resolved image paths are unique": null,
+    "Expected dataset splits": {
+      "train": 2400,
+      "test_unseen": 1200,
+      "validation": 400,
+      "test_seen": 400
+    },
+    "Balanced overall labels": {
+      "0": 2200,
+      "1": 2200
+    },
+    "Balanced labels within splits": {
+      "train": {
+        "0": 1200,
+        "1": 1200
+      },
+      "validation": {
+        "0": 200,
+        "1": 200
+      },
+      "test_seen": {
+        "0": 200,
+        "1": 200
+      },
+      "test_unseen": {
+        "0": 600,
+        "1": 600
+      }
+    },
+    "Midjourney held out for unseen testing": {
+      "midjourney_ai_images": 600,
+      "splits": {
+        "test_unseen": 600
+      }
+    },
+    "All manifest images exist": {
+      "count": 0,
+      "examples": []
+    },
+    "All images are readable": {
+      "count": 0,
+      "examples": []
+    },
+    "All images are 224 x 224": {
+      "count": 0,
+      "examples": []
+    },
+    "All images use JPEG format": {
+      "count": 0,
+      "examples": []
+    },
+    "All images use RGB color": {
+      "count": 0,
+      "examples": []
+    },
+    "No duplicate image file contents": {
+      "duplicate_groups": 0,
+      "examples": []
+    },
+    "File hashes match manifest": {
+      "mismatches": 0,
+      "examples": []
+    },
+    "Exactly 4400 physical JPEG files": {
+      "actual": 4400
+    },
+    "No unlisted JPEG files": {
+      "count": 0,
+      "examples": []
+    }
+  },
+  "overall_result": "PASS"
+}
