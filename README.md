@@ -65,6 +65,7 @@ DS4002_Project3/
     ├── validation_report.json
     ├── training_summary.json
     ├── training_validation_curves.png
+    ├── classification_error_analysis.csv
     └── holder
 ```
 
