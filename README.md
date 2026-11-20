@@ -111,6 +111,46 @@ python SCRIPTS/01_prepare_dataset.py --verify-only --cache-dir DATA/original/cac
 This check independently reconstructs selection, order, labels, splits, original hashes, and rejections, then compares them with the published manifest and rejection log. The final subset has 4,400 images; a fresh acquisition need not include the 307 unused originals retained from earlier downloads.
 
 
+## Analysis Results
+
+The ResNet-50 classifier was trained to distinguish real photographs from AI-generated images using Stable Diffusion 1.4 and 1.5 examples. Its performance was evaluated on both familiar generators and a held-out generator, Midjourney.
+
+### Classification Performance
+
+| Metric | Seen Generators | Unseen Generator |
+|---|---:|---:|
+| Test Images | 400 | 1,200 |
+| Accuracy | 77.25% | 64.33% |
+| Precision | 74.66% | 68.86% |
+| Recall | 82.50% | 52.33% |
+| F1 Score | 78.38% | 59.47% |
+
+The model achieved higher accuracy and F1 scores on familiar generators than on the unseen Midjourney generator. This suggests limitations in generalizing AI-image detection across different image-generation systems.
+
+### JPEG Compression Sensitivity
+
+Additional experiments evaluated model performance after JPEG recompression.
+
+At JPEG quality 50, accuracy decreased to:
+
+- Seen generators: 68.25%
+- Unseen generator: 55.67%
+
+These findings suggest that JPEG compression can negatively affect classification performance.
+
+### Output Files
+
+Detailed results and visualizations are available in the OUTPUT folder:
+
+- `test_metrics.csv`: Classification performance on both test sets.
+- `evaluation_summary.json`: Evaluation metrics and model information.
+- `training_validation_curves.png`: Training and validation performance.
+- `generator_ai_recall.png`: Detection recall by AI generator.
+- `jpeg_accuracy_comparison.png`: Accuracy under JPEG compression.
+- `jpeg_f1_comparison.png`: F1 scores under JPEG compression.
+
+The results are specific to the sampled GenImage subset and should not be interpreted as performance across all AI-image generators.
+
 ## References
 
 [1] M. Zhu et al., "GenImage: A Million-Scale Benchmark for Detecting AI-Generated Image," in *Advances in Neural Information Processing Systems*, vol. 36, 2023. [Online]. Available: https://papers.neurips.cc/paper_files/paper/2023/hash/f4d4a021f9051a6c18183b059117e8b5-Abstract-Datasets_and_Benchmarks.html
