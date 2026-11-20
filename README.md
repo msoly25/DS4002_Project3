@@ -11,6 +11,7 @@ The data preparation workflow uses Python 3.11 on Windows. Scripts resolve paths
 ```text
 DS4002_Project3/
   README.md
+  License.md
   SCRIPTS/
     01_prepare_dataset.py          # acquire, select, filter, and assign raw images
     02_explore_data.py             # validate originals and generate exploratory plots
