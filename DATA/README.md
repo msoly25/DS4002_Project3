@@ -83,8 +83,8 @@ Mingjian Zhu and nine coauthors introduced GenImage in 2023 to evaluate detectio
 
 | Variable | Type | Meaning, values, and uncertainty |
 |---|---|---|
-| image_path | string | Project-relative path to the processed RGB JPEG in `data/cleaned/images/`; use this for modeling. |
-| original_image_path | string | Project-relative path to the unchanged source in `data/original/images/`. |
+| image_path | string | Project-relative path to the processed RGB JPEG in `DATA/cleaned/images/`; use this for modeling. |
+| original_image_path | string | Project-relative path to the unchanged source in `DATA/original/images/`. |
 | label | integer | Binary target: 0 = real, 1 = AI; derived from original folder. |
 | label_name | string | Human-readable `Real` or `AI-generated`. |
 | generator | string | Stable Diffusion 1.4, Stable Diffusion 1.5, Midjourney; `not_applicable` for real. Exact generation settings are not recorded per image. |
