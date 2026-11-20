@@ -84,6 +84,8 @@ DS4002_Project3/
     ├── training_summary.json
     ├── training_validation_curves.png
     ├── classification_error_analysis.csv
+    ├── resnet50_best_model.pth
+    ├── test_predictions.csv
     └── holder
 ```
 
@@ -134,34 +136,10 @@ This check independently reconstructs selection, order, labels, splits, original
 
 ### Model Checkpoint and Evaluation Reproducibility
 
-The evaluation scripts require a trained ResNet-50 checkpoint named `resnet50_best_model.pth`, located in the `OUTPUT/` directory.
+The original trained ResNet-50 checkpoint is available in `OUTPUT/resnet50_best_model.pth`. This checkpoint was used to generate the project's published classification results.
 
-The original checkpoint used to produce the published evaluation metrics is not currently included in this repository.
+After cloning the repository, users can run `SCRIPTS/07_evaluate_resnet50.py` and `SCRIPTS/08_jpeg_sensitivity.py` directly using the included checkpoint, without retraining the model.
 
-To generate a new checkpoint, run:
-
-```bash
-python SCRIPTS/06_train_resnet50.py
-```
-
-This trains the model using the established training and validation splits. The resulting checkpoint is saved to `OUTPUT/resnet50_best_model.pth`.
-
-Once a checkpoint is available, run:
-
-```bash
-python SCRIPTS/07_evaluate_resnet50.py
-python SCRIPTS/08_jpeg_sensitivity.py
-```
-
-These scripts generate the classification metrics, confusion matrices, generator-specific recall results, and JPEG compression sensitivity analysis.
-
-**Reproducibility note:** Retraining may produce different results because of hardware, software versions, and training variability. Exact reproduction of the currently published evaluation metrics requires the original checkpoint used in those experiments.
-
-The existing statistical error analysis can be reproduced independently without a checkpoint:
-
-```bash
-python SCRIPTS/09_classification_error_analysis.py
-```
 
 ## Analysis Results
 
