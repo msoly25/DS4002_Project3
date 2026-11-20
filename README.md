@@ -62,6 +62,7 @@ DS4002_Project3/
     ├── jpeg_sensitivity_summary.json
     ├── test_metrics.csv
     ├── training_history.csv
+    ├── validation_report.json
     ├── training_summary.json
     ├── training_validation_curves.png
     └── holder
