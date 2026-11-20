@@ -6,6 +6,23 @@ This project measures how a ResNet-50 classifier trained on Stable Diffusion 1.4
 
 The data preparation workflow uses Python 3.11 on Windows. Scripts resolve paths relative to the repository and can also run in Linux or Google Colab. Install dependencies from `DATA/cleaned/requirements.txt`: Pillow, requests, pandas, NumPy, matplotlib, PyTorch, torchvision, and scikit-learn. A GPU is useful for modeling; CPU execution is supported. Model initialization downloads ImageNet weights when they are not already cached.
 
+### Verified Google Colab Environment
+
+The data-loading and model-initialization workflow was successfully tested in Google Colab using the following environment:
+
+| Software | Version |
+|---|---|
+| Python | 3.13.18 |
+| PyTorch | 2.14.1+cpu |
+| torchvision | 0.29.1+cpu |
+| scikit-learn | 1.6.1 |
+
+The script `05_prepare_data_and_model.py` completed successfully, confirming that the dataset loaders and pretrained ResNet-50 forward pass work in this environment.
+
+These versions document the verified Colab setup and are not necessarily the versions used during the original model training.
+
+The model-training environment and its exact dependency versions should be confirmed against the original training run for full reproducibility.
+
 ## Repository contents
 
 ```text
