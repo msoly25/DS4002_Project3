@@ -109,3 +109,12 @@ python SCRIPTS/01_prepare_dataset.py --verify-only --cache-dir DATA/original/cac
 ```
 
 This check independently reconstructs selection, order, labels, splits, original hashes, and rejections, then compares them with the published manifest and rejection log. The final subset has 4,400 images; a fresh acquisition need not include the 307 unused originals retained from earlier downloads.
+
+
+## References
+
+[1] M. Zhu et al., "GenImage: A Million-Scale Benchmark for Detecting AI-Generated Image," in *Advances in Neural Information Processing Systems*, vol. 36, 2023. [Online]. Available: https://papers.neurips.cc/paper_files/paper/2023/hash/f4d4a021f9051a6c18183b059117e8b5-Abstract-Datasets_and_Benchmarks.html
+
+[2] GenImage-Dataset, "GenImage," GitHub. [Online]. Available: https://github.com/GenImage-Dataset/GenImage
+
+[3] GenImage-Dataset, "GenImage Dataset License," GitHub. [Online]. Available: https://github.com/GenImage-Dataset/GenImage/blob/main/License
