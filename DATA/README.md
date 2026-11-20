@@ -157,3 +157,14 @@ The subset is evenly divided between 2,200 real and 2,200 AI images. SD1.4 and S
 ![Resolution distributions and original width/height](cleaned/plot2.png)
 
 The boxplots compare native resolution separately by source; colored dots mark medians, boxes cover the middle 50%, whiskers cover observations within 1.5 interquartile ranges, and other dots show outliers. A fixed resolution collapses to a line/dot. The width/height plot exposes image shape; identical dimensions overlap. Source-specific patterns motivate standardized preprocessing and robustness checks; they cannot by themselves measure detector performance.
+
+
+## 8. References
+
+[1] M. Zhu et al., "GenImage: A Million-Scale Benchmark for Detecting AI-Generated Image," in *Advances in Neural Information Processing Systems*, vol. 36, 2023. [Online]. Available: https://arxiv.org/abs/2306.08571
+
+[2] GenImage-Dataset, "GenImage," GitHub. [Online]. Available: https://github.com/GenImage-Dataset/GenImage
+
+[3] GenImage-Dataset, "GenImage Dataset License," GitHub. [Online]. Available: https://github.com/GenImage-Dataset/GenImage/blob/main/License
+
+[4] Creative Commons, "Attribution-NonCommercial-ShareAlike 4.0 International." [Online]. Available: https://creativecommons.org/licenses/by-nc-sa/4.0/
