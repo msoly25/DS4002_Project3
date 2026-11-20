@@ -127,6 +127,28 @@ The ResNet-50 classifier was trained to distinguish real photographs from AI-gen
 
 The model achieved higher accuracy and F1 scores on familiar generators than on the unseen Midjourney generator. This suggests limitations in generalizing AI-image detection across different image-generation systems.
 
+### Classification Errors and Uncertainty
+
+To further evaluate model performance, we examined false-positive rates and estimated 95% confidence intervals for classification accuracy.
+
+| Metric | Seen Generators | Unseen Generator |
+|---|---:|---:|
+| False Positives | 56 | 142 |
+| False Negatives | 35 | 286 |
+| False Positive Rate | 28.00% | 23.67% |
+| 95% Accuracy CI (Lower) | 72.89% | 61.58% |
+| 95% Accuracy CI (Upper) | 81.09% | 66.99% |
+
+The false-positive rate represents the proportion of real photographs incorrectly classified as AI-generated.
+
+The model incorrectly classified 56 of 200 real images in the seen-generator test set and 142 of 600 real images in the unseen-generator test set.
+
+The larger decline in unseen-generator performance was primarily associated with missed AI-generated images. AI recall decreased from 82.50% to 52.33%.
+
+Approximate 95% confidence intervals were calculated using the Wilson score method for binomial proportions. These intervals describe sampling uncertainty under an independence assumption; they do not account for dataset bias, related images, or differences between image generators.
+
+These findings indicate that the classifier has limitations when applied to generators not represented during training.
+
 ### JPEG Compression Sensitivity
 
 Additional experiments evaluated model performance after JPEG recompression.
