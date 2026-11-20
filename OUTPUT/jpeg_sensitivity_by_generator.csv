@@ -1,0 +1,10 @@
+assigned_split,condition,generator,n_ai_images,ai_recall
+test_seen,JPEG 50,Stable Diffusion 1.4,100,0.46
+test_seen,JPEG 50,Stable Diffusion 1.5,100,0.54
+test_seen,JPEG 75,Stable Diffusion 1.4,100,0.63
+test_seen,JPEG 75,Stable Diffusion 1.5,100,0.72
+test_seen,Original,Stable Diffusion 1.4,100,0.82
+test_seen,Original,Stable Diffusion 1.5,100,0.83
+test_unseen,JPEG 50,Midjourney,600,0.21666666666666667
+test_unseen,JPEG 75,Midjourney,600,0.32
+test_unseen,Original,Midjourney,600,0.5233333333333333
