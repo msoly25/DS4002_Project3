@@ -117,18 +117,18 @@ Mingjian Zhu and nine coauthors introduced GenImage in 2023 to evaluate detectio
 
 ## 4. Exploratory Question and Findings
 
-The findings, `eda_summary.json`, and dimension plot below describe the original images before preprocessing. The modeling copies are now uniformly 224 x 224 RGB JPEGs; original values are retained in the manifestâ€™s `original_*` columns.
+The findings, `eda_summary.json`, and dimension plot below describe the original images before preprocessing. The modeling copies are now uniformly 224 x 224 RGB JPEGs; original values are retained in the manifest's `original_*` columns.
 
 **Do real and AI images differ systematically in resolution, potentially affecting classification?** Yes, the measured source distributions differ:
 
 | Source | Images | Median MP | Width range (px) | Height range (px) | Square (%) |
 | --- | --- | --- | --- | --- | --- |
-| Real | 2200 | 0.188 | 62â€“3648 | 75â€“3264 | 3.6 |
-| Stable Diffusion 1.4 | 800 | 0.262 | 512â€“512 | 512â€“512 | 100.0 |
-| Stable Diffusion 1.5 | 800 | 0.262 | 512â€“512 | 512â€“512 | 100.0 |
-| Midjourney | 600 | 1.049 | 1024â€“1024 | 1024â€“1024 | 100.0 |
+| Real | 2200 | 0.188 | 62–3648 | 75–3264 | 3.6 |
+| Stable Diffusion 1.4 | 800 | 0.262 | 512–512 | 512–512 | 100.0 |
+| Stable Diffusion 1.5 | 800 | 0.262 | 512–512 | 512–512 | 100.0 |
+| Midjourney | 600 | 1.049 | 	1024–1024 | 	1024–1024 | 100.0 |
 
-Real images have a median resolution of **0.188 megapixels**, and **3.6%** are square. Every selected Stable Diffusion image is **512Ã—512**, while every selected Midjourney image is **1024Ã—1024**. File encodings also differ: Real: 2,200 JPEG; Stable Diffusion 1.4: 800 PNG; Stable Diffusion 1.5: 800 PNG; Midjourney: 600 PNG. There are also 35 real images decoded in grayscale (`L`); all selected AI images decode as RGB. RGB conversion is necessary for consistent model input but does not remove grayscale content. These associations could offer shortcuts based on image shape, resampling, or compression traces. They do **not** show that ResNet-50 exploits those cues or establish perceptual image quality. The common RGB conversion, proportional resizing, center cropping, and JPEG encoding described above have now been applied. Apply weight-specific normalization when loading model inputs, and predefine additional compression evaluations to assess robustness.
+Real images have a median resolution of **0.188 megapixels**, and **3.6%** are square. Every selected Stable Diffusion image is **512×512**, while every selected Midjourney image is **1024×1024**. File encodings also differ: Real: 2,200 JPEG; Stable Diffusion 1.4: 800 PNG; Stable Diffusion 1.5: 800 PNG; Midjourney: 600 PNG. There are also 35 real images decoded in grayscale (`L`); all selected AI images decode as RGB. RGB conversion is necessary for consistent model input but does not remove grayscale content. These associations could offer shortcuts based on image shape, resampling, or compression traces. They do **not** show that ResNet-50 exploits those cues or establish perceptual image quality. The common RGB conversion, proportional resizing, center cropping, and JPEG encoding described above have now been applied. Apply weight-specific normalization when loading model inputs, and predefine additional compression evaluations to assess robustness.
 
 **Original-image quality audit (before preprocessing):** 4,400 selected images; 50% real and 50% AI; 0 missing files; 0 unreadable files; 0 hash/dimension mismatches; 0 repeated file hashes; 0 repeated decoded-pixel hashes; 0 selected pairs within the visual-hash cutoff; 0 missing metadata cells. Candidate exclusions: near_duplicate_candidate_dhash_le4: 3. These checks cover the selected subset, not all source images. Selected originals occupy **1.749 GB**. The final cached reconstruction transferred **0.000 GB**. Earlier acquisition transferred at least 1.885 GB of image ranges plus approximately 0.135 GB of archive directories; the complete transfer total was not retained when that run was stopped after Drive quota errors. These access failures are distinct from missing or unreadable selected images.
 
@@ -146,13 +146,13 @@ Refine the question to: **How well does a ResNet-50 trained on Stable Diffusion 
 
 ## 7. Exploratory Visualizations
 
-### Plot 1 â€” Dataset composition
+### Plot 1 —” Dataset composition
 
 ![Dataset composition: class and generator counts](cleaned/plot1.png)
 
 The subset is evenly divided between 2,200 real and 2,200 AI images. SD1.4 and SD1.5 each contribute 800 AI images; Midjourney contributes 600. This prevents raw class-count imbalance, while the Midjourney holdout tests a distinct source. The class balance and generator quotas are sampling choices, not evidence of real-world prevalence.
 
-### Plot 2 â€” Original image dimensions by source
+### Plot 2 —” Original image dimensions by source
 
 ![Resolution distributions and original width/height](cleaned/plot2.png)
 
