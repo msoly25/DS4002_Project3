@@ -5,12 +5,9 @@ validation splits, freezes ImageNet-pretrained ResNet-50 features, and trains
 its binary classification head. Selects the best checkpoint by validation
 loss (early stopping), then writes training curves, history, and summary.
 
-Default paths target the existing Google Colab / Google Drive setup.
-Example in Colab after mounting Drive and extracting images.zip:
-    !python 03_train_resnet50.py \
-        --manifest /content/drive/MyDrive/DSProject3_MI3/dataset_manifest.csv \
-        --images /content/mi3_data/images \
-        --output /content/drive/MyDrive/DSProject3_MI3/model_outputs
+Default paths use DATA/cleaned/ and OUTPUT/ in this repository.
+Run from the project root:
+    python SCRIPTS/06_train_resnet50.py
 
 Requirements: torch, torchvision, pandas, Pillow, numpy, matplotlib.
 The test_seen and test_unseen splits are NEVER used in training or selection.
@@ -94,6 +91,64 @@ def load_manifest(manifest_path: Path, images_dir: Path) -> pd.DataFrame:
     if df["resolved_path"].duplicated().any():
         raise ValueError("Duplicate resolved image paths detected")
     # Preserve the original train/validation/test partition sizes.
+    if df['assigned_split'].value_counts().to_dict() != EXPECTED_SPLITS:
+        raise ValueError('Unexpected split counts')
+    if not df['label'].isin([0, 1]).all():
+        raise ValueError('Expected binary labels')
+    return df
+
+
+def run_epoch(model, loader, criterion, device, optimizer=None):
+    """Run one pass, updating only the classification head during training."""
+    # Keep frozen feature extraction and its BatchNorm statistics fixed.
+    model.eval()
+    model.fc.train(optimizer is not None)
+    total_loss, correct, count = 0.0, 0, 0
+    with torch.set_grad_enabled(optimizer is not None):
+        for images, labels in loader:
+            images, labels = images.to(device), labels.to(device)
+            if optimizer is not None:
+                optimizer.zero_grad()
+            logits = model(images).flatten()
+            loss = criterion(logits, labels)
+            if optimizer is not None:
+                loss.backward()
+                optimizer.step()
+            total_loss += loss.item() * len(labels)
+            correct += ((logits >= 0) == labels.bool()).sum().item()
+            count += len(labels)
+    return total_loss / count, correct / count
+
+
+def main():
+    root = Path(__file__).resolve().parents[1]
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--manifest', type=Path, default=root / 'DATA/cleaned/dataset_manifest.csv')
+    parser.add_argument('--images', type=Path, default=root / 'DATA/cleaned/images')
+    parser.add_argument('--output', type=Path, default=root / 'OUTPUT')
+    parser.add_argument('--batch-size', type=int, default=32)
+    parser.add_argument('--epochs', type=int, default=15)
+    parser.add_argument('--patience', type=int, default=3)
+    parser.add_argument('--learning-rate', type=float, default=0.001)
+    parser.add_argument('--seed', type=int, default=42)
+    parser.add_argument('--num-workers', type=int, default=2)
+    args = parser.parse_args()
+    if min(args.batch_size, args.epochs, args.patience) < 1 or args.num_workers < 0 or args.learning_rate <= 0:
+        parser.error('Positive batch size, epochs, patience, learning rate and nonnegative workers required')
+    random.seed(args.seed)
+    np.random.seed(args.seed)
+    torch.manual_seed(args.seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(args.seed)
+    df = load_manifest(args.manifest, args.images)
+    train_df = df.loc[df['assigned_split'] == 'train'].copy()
+    val_df = df.loc[df['assigned_split'] == 'validation'].copy()
+    train_loader = DataLoader(AIImageDataset(train_df), batch_size=args.batch_size,
+                              shuffle=True, num_workers=args.num_workers)
+    val_loader = DataLoader(AIImageDataset(val_df), batch_size=args.batch_size,
+                            shuffle=False, num_workers=args.num_workers)
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model = models.resnet50(weights=ResNet50_Weights.DEFAULT)
     # Freeze the backbone: do not fine-tune convolutional layers.
     for parameter in model.parameters():
         parameter.requires_grad = False
@@ -204,3 +259,7 @@ def load_manifest(manifest_path: Path, images_dir: Path) -> pd.DataFrame:
     print(f"Best epoch: {best_epoch} | Best validation loss: {best_val_loss:.4f}", flush=True)
     for path in (model_path, plot_path, history_path, summary_path):
         print(f"Saved: {path}", flush=True)
+
+
+if __name__ == '__main__':
+    main()

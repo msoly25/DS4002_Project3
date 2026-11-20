@@ -4,7 +4,7 @@ Uses a frozen, previously trained ResNet-50 checkpoint; does not retrain.
 Evaluates original standardized images and JPEG recompression at qualities 75/50
 on the held-out test_seen and test_unseen splits.
 
-Outputs (in jpeg_sensitivity_outputs/):
+Outputs (in OUTPUT/):
     jpeg_sensitivity_metrics.csv
     jpeg_sensitivity_predictions.csv
     jpeg_sensitivity_comparison.csv
@@ -13,8 +13,8 @@ Outputs (in jpeg_sensitivity_outputs/):
     jpeg_f1_comparison.png
     jpeg_sensitivity_summary.json
 
-Run in Colab: !python /content/05_jpeg_sensitivity.py
-Or locally: python 05_jpeg_sensitivity.py --base-dir /path/to/DSProject3_MI3
+Run from the project root: python SCRIPTS/08_jpeg_sensitivity.py
+For another clone: python SCRIPTS/08_jpeg_sensitivity.py --base-dir /path/to/DS4002_Project3
 """
 
 # Read optional command-line settings so the same script works in Colab or locally.
@@ -109,6 +109,17 @@ def resolve_images(manifest, extract_dir, zip_path):
         lambda p: lookup.get(Path(str(p)).name)
     )
     return manifest
+
+
+def evaluate(model, device, frame, quality, batch_size, num_workers):
+    """Evaluate one JPEG condition on a fixed test split without changing weights."""
+    loader = DataLoader(JPEGTestDataset(frame, quality), batch_size=batch_size,
+                        shuffle=False, num_workers=num_workers)
+    labels, predicted, probabilities = [], [], []
+    model.eval()
+    with torch.inference_mode():
+        for images, batch_labels in loader:
+            scores = torch.sigmoid(model(images.to(device))).flatten()
             probabilities.extend(scores.cpu().tolist())
             # Fixed 0.5 decision threshold: >= 0.5 predicts AI (class 1).
             predicted.extend((scores >= 0.5).long().cpu().tolist())
@@ -138,19 +149,19 @@ def resolve_images(manifest, extract_dir, zip_path):
 # Coordinate input validation, model loading, experiment runs, and outputs.
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--base-dir", default="/content/drive/MyDrive/DSProject3_MI3")
-    parser.add_argument("--extract-dir", default="/content/mi3_data")
+    parser.add_argument("--base-dir", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument("--extract-dir", type=Path, default=None)
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--num-workers", type=int, default=2)
     # Colab may supply unrelated kernel flags; ignore those safely.
     args, _ = parser.parse_known_args()  # Compatible with notebook-injected arguments.
 
     base = Path(args.base_dir)
-    output = base / "jpeg_sensitivity_outputs"
-    # Keep experiment outputs separate from training and baseline evaluation.
+    output = base / "OUTPUT"
+    # Distinct filenames separate experiment outputs from baseline results.
     output.mkdir(parents=True, exist_ok=True)
-    manifest_path = base / "dataset_manifest.csv"
-    checkpoint_path = base / "model_outputs" / "resnet50_best_model.pth"
+    manifest_path = base / "DATA" / "cleaned" / "dataset_manifest.csv"
+    checkpoint_path = base / "OUTPUT" / "resnet50_best_model.pth"
     if not manifest_path.is_file() or not checkpoint_path.is_file():
         raise FileNotFoundError(f"Expected {manifest_path} and {checkpoint_path}. Check --base-dir.")
 
@@ -161,7 +172,7 @@ def main():
         raise ValueError(f"Missing manifest columns: {required - set(manifest.columns)}")
     # Never use training or validation images in this final robustness test.
     manifest = manifest[manifest["assigned_split"].isin(["test_seen", "test_unseen"])].copy()
-    manifest = resolve_images(manifest, Path(args.extract_dir), base / "images.zip")
+    manifest = resolve_images(manifest, (Path(args.extract_dir) if args.extract_dir else base / "DATA" / "cleaned" / "images"), base / "DATA" / "cleaned" / "images.zip")
     if manifest["resolved_path"].isna().any():
         missing = manifest.loc[manifest["resolved_path"].isna(), "image_path"].head().tolist()
         raise FileNotFoundError(f"Test images not found after extraction: {missing}")

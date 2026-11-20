@@ -3,10 +3,8 @@ PURPOSE:
 Reproduces the data-loading and model-initialization stage of the analysis.
 Does NOT train or evaluate on the held-out test sets.
 
-Colab example:
-    !python 02_prepare_data_and_model.py \
-        --manifest /content/drive/MyDrive/DSProject3_MI3/dataset_manifest.csv \
-        --images /content/mi3_data/images
+Run from the project root:
+    python SCRIPTS/05_prepare_data_and_model.py
 
 Requires: torch, torchvision, pandas, Pillow.
 """
@@ -45,8 +43,8 @@ class AIImageDataset(Dataset):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--manifest', type=Path, default=Path('DATA/cleaned/dataset_manifest.csv'))
-    parser.add_argument('--images', type=Path, default=Path('DATA/cleaned/images'))
+    parser.add_argument('--manifest', type=Path, default=Path(__file__).resolve().parents[1] / 'DATA/cleaned/dataset_manifest.csv')
+    parser.add_argument('--images', type=Path, default=Path(__file__).resolve().parents[1] / 'DATA/cleaned/images')
     parser.add_argument('--batch-size', type=int, default=32)
     args = parser.parse_args()
 

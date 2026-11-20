@@ -6,7 +6,7 @@ splits. No model parameters are updated and no training is performed here.
 
 Labels: 0 = real photograph; 1 = AI-generated image.
 
-Outputs in DSProject3_MI3/evaluation_outputs/:
+Outputs in OUTPUT/:
   test_metrics.csv                 - one row of metrics per test split
   test_predictions.csv             - individual image predictions/probabilities
   confusion_matrix_test_seen.png  - classification counts for familiar generators
@@ -15,12 +15,9 @@ Outputs in DSProject3_MI3/evaluation_outputs/:
   generator_ai_recall.png          - bar chart of generator-specific recall
   evaluation_summary.json         - settings and key results in structured form
 
-Google Colab (after mounting Drive):
-  !python /content/04_evaluate_resnet50.py
-
-Or locally:
-  python 04_evaluate_resnet50.py --base-dir /path/to/DSProject3_MI3 \
-      --extract-dir /path/to/extracted_images
+Run from the project root:
+  python SCRIPTS/07_evaluate_resnet50.py
+Use --base-dir to select another clone of this repository.
 """
 
 # Standard-library modules handle command-line settings, structured JSON,
@@ -207,20 +204,20 @@ def save_confusion_matrix(frame, split, output_dir):
 def main():
     """Load inputs, evaluate both held-out splits, and write output files."""
 
-    # Default locations match the existing DSProject3_MI3 Google Drive setup.
+    # Default locations use this repository, including when cloned in Colab.
     # Command-line flags allow someone else to reproduce the analysis locally.
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--base-dir", default="/content/drive/MyDrive/DSProject3_MI3")
-    parser.add_argument("--extract-dir", default="/content/mi3_data")
+    parser.add_argument("--base-dir", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument("--extract-dir", type=Path, default=None)
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--num-workers", type=int, default=2)
     args, _ = parser.parse_known_args()  # Ignore Colab notebook-injected arguments.
 
     # Keep output files separate from the manifest and saved model checkpoint.
     base = Path(args.base_dir)
-    output_dir = base / "evaluation_outputs"
-    manifest_path = base / "dataset_manifest.csv"
-    checkpoint_path = base / "model_outputs" / "resnet50_best_model.pth"
+    output_dir = base / "OUTPUT"
+    manifest_path = base / "DATA" / "cleaned" / "dataset_manifest.csv"
+    checkpoint_path = base / "OUTPUT" / "resnet50_best_model.pth"
     if not manifest_path.is_file() or not checkpoint_path.is_file():
         raise FileNotFoundError("Missing dataset_manifest.csv or model checkpoint under " + str(base))
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -235,7 +232,7 @@ def main():
     manifest = manifest[manifest["assigned_split"].isin(["test_seen", "test_unseen"])].copy()
     if len(manifest) != 1600:
         raise ValueError(f"Expected 1600 held-out images, found {len(manifest)}")
-    manifest = resolve_images(manifest, Path(args.extract_dir), base / "images.zip")
+    manifest = resolve_images(manifest, (Path(args.extract_dir) if args.extract_dir else base / "DATA" / "cleaned" / "images"), base / "DATA" / "cleaned" / "images.zip")
 
     # Load the same ResNet-50 architecture used during training, including its
     # one-output binary head. weights=None avoids downloading new weights:
@@ -306,7 +303,7 @@ def main():
     with open(output_dir / "evaluation_summary.json", "w") as file:
         json.dump(summary, file, indent=2)
 
-    # Show key results in the terminal in addition to writing them to Drive.
+    # Show key results in the terminal in addition to writing them to OUTPUT/.
     print("\nSaved evaluation outputs to:", output_dir)
     print(metrics_df.to_string(index=False))
     print("\nGenerator-specific AI recall:")

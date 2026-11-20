@@ -1,6 +1,6 @@
 """Build and verify modeling copies offline; originals and splits never change.
 
-Run from the project root: python SCRIPTS/00_preprocess.py
+Run from the project root: python SCRIPTS/03_preprocess.py
 Requires Pillow==13.0.0 (see DATA/cleaned/requirements.txt).
 The manifest is published only after all output checks pass. Reruns always
 read originals, never previously compressed modeling copies.

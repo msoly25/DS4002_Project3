@@ -1,22 +1,71 @@
-# DS4002_Project3
+# DS4002 Project 3
 
-The original and cleaned dataset images are included as regular Git files. Clone the repository to download them:
+This project measures how a ResNet-50 classifier trained on Stable Diffusion 1.4/1.5 images distinguishes real and AI-generated images, including held-out Midjourney images and JPEG recompression tests.
+
+## Software and platform
+
+The data preparation workflow uses Python 3.11 on Windows. Scripts resolve paths relative to the repository and can also run in Linux or Google Colab. Install dependencies from `DATA/cleaned/requirements.txt`: Pillow, requests, pandas, NumPy, matplotlib, PyTorch, torchvision, and scikit-learn. A GPU is useful for modeling; CPU execution is supported. Model initialization downloads ImageNet weights when they are not already cached.
+
+## Repository contents
+
+```text
+DS4002_Project3/
+  README.md
+  SCRIPTS/
+    01_prepare_dataset.py          # acquire, select, filter, and assign raw images
+    02_explore_data.py             # validate originals and generate exploratory plots
+    03_preprocess.py               # standardize selected images to RGB 224 x 224 JPEGs
+    04_validate_cleaned_images.py  # verify final images and splits
+    05_prepare_data_and_model.py   # check loaders and model initialization
+    06_train_resnet50.py           # train and save the best validation-loss checkpoint
+    07_evaluate_resnet50.py        # evaluate seen and unseen test splits
+    08_jpeg_sensitivity.py         # evaluate JPEG recompression robustness
+    remote_zip.py                 # archive reader imported by stage 01
+  DATA/
+    README.md                     # metadata, dictionary, source terms, and EDA
+    original/                     # source inventory, provenance, unchanged images
+    cleaned/                      # final manifest, processed images, audits, EDA
+  OUTPUT/                         # training history, evaluation tables, and figures
+```
+
+See [DATA/README.md](DATA/README.md) for the detailed data inventory and [source acquisition instructions](DATA/original/GET_DATA.md).
+
+## Reproduce the results
+
+Clone the repository, open a terminal in its root, and install dependencies:
 
 ```text
 git clone https://github.com/msoly25/DS4002_Project3.git
+cd DS4002_Project3
+python -m pip install -r DATA/cleaned/requirements.txt
 ```
 
-For an existing clone, run `git pull` in the project folder. No Git LFS setup is needed. The images total approximately 1.91 GiB (4,707 originals and 4,400 cleaned images), with additional disk space needed for Git history.
+Both image directories are regular Git files; no Git LFS setup is required. The existing clone contains 4,707 originals and 4,400 cleaned images, approximately 1.91 GiB plus Git history. Only the 4,400 manifest records belong to the modeling dataset.
 
-See [DATA/README.md](DATA/README.md) for dataset details and [download instructions](DATA/original/GET_DATA.md) for source restoration. Use `DATA/cleaned/dataset_manifest.csv` to select the 4,400 modeling images.
-
-## Data preprocessing
-
-To recreate the cleaned modeling images from the included originals, run these commands from the project root before validation and modeling:
+Run the numbered scripts in order to reproduce from raw source data:
 
 ```text
-python -m pip install -r DATA/cleaned/requirements.txt
-python SCRIPTS/00_preprocess.py
+python SCRIPTS/01_prepare_dataset.py
+python SCRIPTS/02_explore_data.py
+python SCRIPTS/03_preprocess.py
+python SCRIPTS/04_validate_cleaned_images.py
+python SCRIPTS/05_prepare_data_and_model.py
+python SCRIPTS/06_train_resnet50.py
+python SCRIPTS/07_evaluate_resnet50.py
+python SCRIPTS/08_jpeg_sensitivity.py
 ```
 
-The script preserves the originals and assigned splits, and writes the cleaned images, updated manifest, and preprocessing audit to `DATA/cleaned/`.
+1. Stage 01 reads the source archive inventory, ranks raw archive paths with seed 4002, checks original bytes, filters duplicates, and assigns fixed split quotas. It reuses verified original images already present and downloads missing candidates using HTTP ranges. Archive indexes are cached under `DATA/original/cache/`; first-run index retrieval is approximately 135 MB. Source access and download quotas can interrupt acquisition. The final manifest is used only as a comparison target with `--verify-only`, not as input to selection.
+2. Stage 02 verifies selected originals and writes the two exploratory plots, split counts, and quality summaries under `DATA/cleaned/`.
+3. Stage 03 converts originals into standardized modeling copies and updates the manifest with original and processed measurements. Stage 01 temporarily writes an original-image manifest; complete stage 03 before modeling. Stage 04 verifies the final 4,400 images and writes `OUTPUT/validation_report.json`.
+4. Stage 05 checks data loading and a forward pass. Stage 06 trains using only train/validation splits and saves `OUTPUT/resnet50_best_model.pth`, training history, curves, and settings. Stage 07 uses that checkpoint for separate seen/unseen test metrics. Stage 08 uses the same frozen checkpoint for JPEG qualities 75 and 50.
+
+For an already prepared clone, start at stage 04 to retain the committed dataset. To regenerate only standardized images, run stage 03. The checkpoint is generated by stage 06 and is required for stages 07 and 08. Modeling writes results to `OUTPUT/`. Numerical results may vary with the hardware and PyTorch environment; the data preparation dependencies are pinned in the requirements file.
+
+To verify raw selection without rewriting data or accessing the network, use a complete archive-index cache and the original image files:
+
+```text
+python SCRIPTS/01_prepare_dataset.py --verify-only --cache-dir DATA/original/cache
+```
+
+This check independently reconstructs selection, order, labels, splits, original hashes, and rejections, then compares them with the published manifest and rejection log. The final subset has 4,400 images; a fresh acquisition need not include the 307 unused originals retained from earlier downloads.

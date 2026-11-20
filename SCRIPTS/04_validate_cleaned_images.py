@@ -1,5 +1,5 @@
 """
-Step 1: Physical File Validation
+Step 4: Physical File Validation
 
 Purpose:
 Verify the integrity and organization of the 4,400 cleaned
@@ -35,15 +35,10 @@ from PIL import Image
 # 1. FILE LOCATIONS
 # --------------------------------------------------
 
-MANIFEST_PATH = Path(
-    "/content/drive/MyDrive/DSProject3_MI3/dataset_manifest.csv"
-)
-
-IMAGE_DIR = Path("/content/mi3_data/images")
-
-OUTPUT_PATH = Path(
-    "/content/drive/MyDrive/DSProject3_MI3/step1_validation_report.json"
-)
+ROOT = Path(__file__).resolve().parents[1]
+MANIFEST_PATH = ROOT / 'DATA' / 'cleaned' / 'dataset_manifest.csv'
+IMAGE_DIR = ROOT / 'DATA' / 'cleaned' / 'images'
+OUTPUT_PATH = ROOT / 'OUTPUT' / 'validation_report.json'
 
 EXPECTED_SPLITS = {
     "train": 2400,
@@ -83,7 +78,7 @@ def calculate_sha256(path):
 def main():
 
     print("DS 4002 Project 3")
-    print("STEP 1: PHYSICAL FILE VALIDATION")
+    print("STEP 4: PHYSICAL FILE VALIDATION")
     print("-" * 45)
 
     if not MANIFEST_PATH.is_file():
@@ -142,7 +137,7 @@ def main():
         manifest["image_path"].is_unique
     )
 
-    # Resolve repository-relative paths to Colab paths.
+    # Resolve manifest entries to the repository cleaned-image directory.
     manifest["resolved_path"] = manifest[
         "image_path"
     ].apply(
