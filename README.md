@@ -10,23 +10,61 @@ The data preparation workflow uses Python 3.11 on Windows. Scripts resolve paths
 
 ```text
 DS4002_Project3/
-  README.md
-  LICENSE.md
-  SCRIPTS/
-    01_prepare_dataset.py          # acquire, select, filter, and assign raw images
-    02_explore_data.py             # validate originals and generate exploratory plots
-    03_preprocess.py               # standardize selected images to RGB 224 x 224 JPEGs
-    04_validate_cleaned_images.py  # verify final images and splits
-    05_prepare_data_and_model.py   # check loaders and model initialization
-    06_train_resnet50.py           # train and save the best validation-loss checkpoint
-    07_evaluate_resnet50.py        # evaluate seen and unseen test splits
-    08_jpeg_sensitivity.py         # evaluate JPEG recompression robustness
-    remote_zip.py                 # archive reader imported by stage 01
-  DATA/
-    README.md                     # metadata, dictionary, source terms, and EDA
-    original/                     # source inventory, provenance, unchanged images
-    cleaned/                      # final manifest, processed images, audits, EDA
-  OUTPUT/                         # training history, evaluation tables, and figures
+├── README.md
+├── LICENSE.md
+│
+├── SCRIPTS/
+│   ├── 01_prepare_dataset.py
+│   ├── 02_explore_data.py
+│   ├── 03_preprocess.py
+│   ├── 04_validate_cleaned_images.py
+│   ├── 05_prepare_data_and_model.py
+│   ├── 06_train_resnet50.py
+│   ├── 07_evaluate_resnet50.py
+│   ├── 08_jpeg_sensitivity.py
+│   ├── remote_zip.py
+│   └── holder
+│
+├── DATA/
+│   ├── README.md
+│   ├── original/
+│   │   ├── .gitignore
+│   │   ├── GET_DATA.md
+│   │   ├── original_files.csv
+│   │   ├── source_inventory.json
+│   │   ├── source_manifest.csv
+│   │   └── images/ (4,707 original images)
+│   │
+│   └── cleaned/
+│       ├── .gitignore
+│       ├── dataset_manifest.csv
+│       ├── eda_summary.json
+│       ├── preparation_audit.json
+│       ├── preprocessing_audit.json
+│       ├── quality_audit.json
+│       ├── rejected_candidates.csv
+│       ├── requirements.txt
+│       ├── split_counts.csv
+│       ├── plot1.png
+│       ├── plot2.png
+│       └── images/ (4,400 processed images)
+│
+└── OUTPUT/
+    ├── confusion_matrix_test_seen (1).png
+    ├── confusion_matrix_test_unseen (1).png
+    ├── evaluation_summary.json
+    ├── generator_ai_recall.csv
+    ├── generator_ai_recall.png
+    ├── jpeg_accuracy_comparison.png
+    ├── jpeg_f1_comparison.png
+    ├── jpeg_sensitivity_comparison.csv
+    ├── jpeg_sensitivity_metrics.csv
+    ├── jpeg_sensitivity_summary.json
+    ├── test_metrics.csv
+    ├── training_history.csv
+    ├── training_summary.json
+    ├── training_validation_curves.png
+    └── holder
 ```
 
 See [DATA/README.md](DATA/README.md) for the detailed data inventory and [source acquisition instructions](DATA/original/GET_DATA.md).
