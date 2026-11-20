@@ -87,7 +87,7 @@ DS4002_Project3/
     ├── resnet50_best_model.pth
     ├── test_predictions.csv
     ├── jpeg_sensitivity_by_generator.csv
-    ├── jpeg_sensitivity_predictions.cs
+    ├── jpeg_sensitivity_predictions.csv
     └── holder
 ```
 
